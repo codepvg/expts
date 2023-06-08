@@ -45,5 +45,67 @@
       <iframe src="https://drive.google.com/file/d/1pxGQBV2rrv_TzgX0CXHXhC0rUmCeftJM/preview" width="640" height="480" allow="autoplay"></iframe>
     </div>
   </div>
+
+  <!-- MATLAB Code for Sampling -->
+  <pre><code>% Signal parameters
+f = 10; % Frequency of the continuous-time signal (in Hz)
+fs = 10*f; % Sampling frequency (in Hz)
+
+% Time axis
+t = 0:1/fs:1; % Time vector from 0 to 1 second with a step of 1/fs
+
+% Continuous-time signal
+x = sin(2*pi*f*t);
+
+% Plot the continuous-time signal
+subplot(2,1,1);
+plot(t, x);
+title('Continuous-Time Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+% Discrete-time signal (sampled version)
+n = 0:1:fs; % Integer time instants for sampling
+x_s = sin(2*pi*f*n/fs);
+
+% Plot the discrete-time signal
+subplot(2,1,2);
+stem(n/fs, x_s);
+title('Discrete-Time Signal (Sampled)');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+% Verify the sampling theorem
+Nyquist_rate = 2*f; % Nyquist rate for the signal (according to the sampling theorem)
+Nyquist_frequency = fs/2; % Nyquist frequency for the given sampling rate
+if Nyquist_rate <= Nyquist_frequency
+    disp('Sampling theorem is satisfied.');
+else
+    disp('Sampling theorem is not satisfied.');
+end</code></pre>
+
+  <!-- MATLAB Code for Scrambler -->
+  <pre><code>N = 8;
+scrambler = comm.Scrambler(N,'1 + x^-2 + x^-3 + x^-5 + x^-7', ...
+    [0 3 2 2 5 1 7]);
+descrambler = comm.Descrambler(N,[1 0 1 1 0 1 0 1], ...
+    [0 3 2 2 5 1 7]);
+
+data = randi([0 N-1],5,1);
+scrData = scrambler(data);
+deScrData = descrambler(scrData);
+[data scrData deScrData]</code></pre>
+
+  <!-- MATLAB Code for SNR PCM -->
+  <pre><code>A = input("Amplitude: ");
+D = input("Step Size: ");
+
+ps = A^2 / 2;
+n = D^2 / 12;
+snr = ps/n;
+
+snrdb = 20*log(snr);
+disp(snrdb);</code></pre>
+
 </body>
 </html>
